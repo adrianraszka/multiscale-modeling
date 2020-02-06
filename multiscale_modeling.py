@@ -13,6 +13,74 @@ import math
 
 class Grain_grow():    
 
+    def lab5_1(self, width :int, height :int, draw2 :int, von_neumann :bool, moore :bool):
+        """returns self.image"""
+        self.width = width
+        self.height = height
+        self.number_of_grains = draw2
+        self.von_neumann = von_neumann
+        self.moore = moore
+        
+        self.image = np.zeros((self.width, self.height,), dtype=float)
+        self.image_old = np.zeros((self.width, self.height), dtype=float)
+        self.image_only_b = np.zeros((self.width, self.height, 3), dtype=float)
+        self.image_single_g = np.zeros((self.width, self.height, 3), dtype=float)
+        self.seed_random_grains()
+
+        for i in range(0, self.width): 
+            for j in range(0, self.height):
+                if self.image[i, j] == 0:
+                    self.update_status_of_grain()
+                else:
+                    pass   
+
+        # self.change_to_rgb()
+        # plt.matshow(self.copy_of_image)
+        plt.matshow(self.image)
+
+        self.image_b = self.image
+
+        for i in range(0, self.width): 
+            for j in range(0, self.height):
+                self.check_for_boundary(i, j, self.image_old)
+
+        self.boundaries = self.passed_image
+        # plt.matshow(self.boundaries[1:,1:])
+
+        #leave only boundaries
+        for k in range(self.number_of_grains):
+            r = random.uniform(0.01, 0.99)
+            g = random.uniform(0.01, 0.99)
+            b = random.uniform(0.01, 0.99)
+            for i in range(0, self.width): 
+                for j in range(0, self.height):
+                    if self.image_old[i, j] != 100:
+                        self.image_only_b[i, j] = [0, 0, 0]
+                    else:
+                        self.image_only_b[i, j] = [1, 1, 1]
+        
+        plt.matshow(self.image_only_b[1:,1:])
+
+        random_grain = random.randint(1, self.number_of_grains)
+        for i in range(0, self.width): 
+            for j in range(0, self.height):
+                if self.image[i, j] == random_grain:
+                    pass
+                else:
+                    self.image[i,j] = 100
+        
+        # plt.matshow(self.image)
+
+        for i in range(0, self.width): 
+            for j in range(0, self.height):
+                self.check_for_boundary(i, j, self.image_single_g)
+                
+        self.single_boundaries = self.passed_image
+        plt.matshow(self.single_boundaries[1:,1:])
+
+        plt.show()
+
+
     def draw_1st_phase(self, draw1:int, draw2:int, width :int, height :int, number_of_grains :int, von_neumann :bool, moore :bool):
         self.draw1 = draw1
         self.draw2 = draw2
@@ -35,13 +103,33 @@ class Grain_grow():
 
         #merge cells into 1 phase
         self.change_to_rgb()
-        for g in range(self.draw1):
-            print(g)
-            for i in range(0, self.width): 
-                for j in range(0, self.height):
-                    if self.image[i, j] == int(g):
-                        self.image[i, j] = 1
+        self.color_image = self.copy_of_image
+        self.color_image = self.color_image.tolist()
+        plt.matshow(self.color_image)
+        list_of_s = []
+        for i in range(0, self.width): 
+            for j in range(0, self.height):
+                if self.color_image[i][j] in list_of_s:
+                    pass
+                else:
+                    list_of_s.append(self.color_image[i][j])
 
+        random_colors = []
+
+        for q in range(self.draw1):
+            random_color = random.choice(list_of_s)
+            random_colors.append(random_color)
+
+        for i in range(0, self.width): 
+            for j in range(0, self.height):
+                if self.color_image[i][j] in random_colors:
+                    pass
+                else:
+                    self.color_image[i][j] = [1., 1., 1.]
+
+        # plt.matshow(self.color_image)
+
+        print(list_of_s)
         #leave only 1 phase, rest goes white
         for i in range(0, self.width): 
             for j in range(0, self.height):
@@ -60,13 +148,13 @@ class Grain_grow():
 
         for i in range(0, self.width): 
             for j in range(0, self.height):
-                if self.phase_image[i][j] == [1., 0., 0.]:
-                    self.copy_of_image[i][j] = [1., 0., 0.]
+                if self.color_image[i][j] != [1., 1., 1.]:
+                    self.copy_of_image[i][j] = self.color_image[i][j]
                 else:
                     pass
 
         plt.matshow(self.copy_of_image)
-        plt.matshow(self.phase_image)
+        # plt.matshow(self.phase_image)
                     
         plt.show()
 
@@ -221,10 +309,12 @@ class Grain_grow():
                 else:
                     pass   
 
+        
         # self.change_to_rgb()
+        # plt.matshow(self.copy_of_image)
+        # plt.show()
 
-        # plt.matshow(self.image)
-        return self.image
+        return self.copy_of_image
 
 
 
@@ -505,6 +595,50 @@ class Grain_grow():
 
         return value
 
+    def check_for_boundary(self, i, j, image):
+        self.passed_image = image
+  
+        self.nejbors = []
+
+
+        try:
+            if self.image[i-1, j] in self.nejbors:
+                pass
+            else:
+                self.nejbors.append(self.image[i-1, j]) 
+        except:
+            pass
+        try:
+            if self.image[i, j-1] in self.nejbors:
+                pass
+            else:
+                self.nejbors.append(self.image[i, j-1]) #4
+        except:
+            pass
+        try:
+            if self.image[i, j+1] in self.nejbors:
+                pass
+            else:
+                self.nejbors.append(self.image[i, j-1])
+        except:
+            pass
+        try:
+            if self.image[i+1, j] in self.nejbors:
+                pass
+            else:
+                self.nejbors.append(self.image[i+1, j])
+        except:
+            pass
+        
+        print(len(self.nejbors))
+
+        try:
+            if len(self.nejbors) <= 1:
+                self.passed_image[i, j] = 100
+        except:
+            pass
+
+        return self.passed_image
 
 if __name__ == "__main__":
     gr = Grain_grow()

@@ -22,9 +22,6 @@ import multiscale_modeling as mm
 
 class Ui_MainWindow(object):
 
-    def __init__(self):
-        grain_grow = mm.Grain_grow()
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(745, 389)
@@ -142,18 +139,21 @@ class Ui_MainWindow(object):
         self.dp_clear_push = QtWidgets.QPushButton(self.centralwidget)
         self.dp_clear_push.setGeometry(QtCore.QRect(570, 150, 61, 41))
         self.dp_clear_push.setObjectName("dp_clear_push")
-        self.dp_redraw_push = QtWidgets.QPushButton(self.centralwidget)
-        self.dp_redraw_push.setGeometry(QtCore.QRect(570, 200, 61, 41))
-        self.dp_redraw_push.setObjectName("dp_redraw_push")
+        # self.dp_redraw_push = QtWidgets.QPushButton(self.centralwidget)
+        # self.dp_redraw_push.setGeometry(QtCore.QRect(570, 200, 61, 41))
+        # self.dp_redraw_push.setObjectName("dp_redraw_push")
         self.height_10 = QtWidgets.QLabel(self.centralwidget)
         self.height_10.setGeometry(QtCore.QRect(660, 30, 121, 16))
         self.height_10.setObjectName("height_10")
-        self.draw_grain_boundaries_push = QtWidgets.QPushButton(self.centralwidget)
-        self.draw_grain_boundaries_push.setGeometry(QtCore.QRect(660, 50, 61, 41))
-        self.draw_grain_boundaries_push.setObjectName("draw_grain_boundaries_push")
-        self.clear_grain_boundaries_push = QtWidgets.QPushButton(self.centralwidget)
-        self.clear_grain_boundaries_push.setGeometry(QtCore.QRect(660, 100, 61, 41))
-        self.clear_grain_boundaries_push.setObjectName("clear_grain_boundaries_push")
+        self.draw1 = QtWidgets.QPushButton(self.centralwidget)
+        self.draw1.setGeometry(QtCore.QRect(660, 50, 61, 41))
+        self.draw1.setObjectName("draw1")
+        # self.draw2 = QtWidgets.QPushButton(self.centralwidget)
+        # self.draw2.setGeometry(QtCore.QRect(660, 100, 61, 41))
+        # self.draw2.setObjectName("draw1")
+        # self.draw3 = QtWidgets.QPushButton(self.centralwidget)
+        # self.draw3.setGeometry(QtCore.QRect(660, 150, 61, 41))
+        # self.draw3.setObjectName("draw3")
         self.save_push = QtWidgets.QPushButton(self.centralwidget)
         self.save_push.setGeometry(QtCore.QRect(120, 220, 91, 41))
         self.save_push.setObjectName("save_push")
@@ -206,8 +206,38 @@ class Ui_MainWindow(object):
         self.first_add_inclusions_push.clicked.connect(self.draw_inclusions_before)
 
         self.dp_clear_push.clicked.connect(self.lab3_draw1)
-        self.dp_redraw_push.clicked.connect(self.lab3_draw2)
+        # self.dp_redraw_push.clicked.connect(self.lab3_draw2)
         # self.first_add_inclusions_push.clicked.connect(self.lab_2)
+
+        self.draw1.clicked.connect(self.lab5_draw1)
+        # self.draw2.clicked.connect(self.lab5_draw2)
+        # self.draw3.clicked.connect(self.lab5_draw3)
+
+    def lab5_draw1(self):
+        self.width_draw = int(self.width.toPlainText())
+        self.height_draw = int(self.height.toPlainText())
+        self.number_of_grains_draw = int(self.number_of_grains.toPlainText())
+
+        if self.von_neumann_check.isChecked():
+            self.von_neumann_check_draw = True
+            self.moore_check_draw = False
+        else:
+            self.von_neumann_check_draw = False
+            self.moore_check_draw = True
+
+        try:
+            grain_grow = mm.Grain_grow()
+            grain_grow.lab5_1(self.width_draw, self.height_draw, self.number_of_grains_draw, self.von_neumann_check_draw, self.moore_check_draw)
+        except:
+            grain_grow = mm.Grain_grow()
+            grain_grow.lab5_1(self.width_draw, self.height_draw, self.number_of_grains_draw, self.von_neumann_check_draw, self.moore_check_draw)
+
+    def lab5_draw2(self):
+        grain_grow = mm.Grain_grow()
+        grain_grow.lab5_2_draw()
+    
+    def lab5_draw3(self):
+        pass
 
     def lab3_draw1(self):
         self.draw1 = int(self.dp_grain_ID.toPlainText())
@@ -228,10 +258,6 @@ class Ui_MainWindow(object):
 
     def lab3_draw2(self):
         pass
-
-
-
-
 
     def draw_background(self):
         self.number_of_inclusions_draw = int(self.number_of_inclusions.toPlainText())
@@ -277,7 +303,6 @@ class Ui_MainWindow(object):
         grain_grow = mm.Grain_grow()
         grain_grow.final_image_lab2(self.width_draw, self.height_draw, self.number_of_inclusions_draw, self.size_of_inclusions_draw, self.shape_square_check_bool, self.shape_circular_check_bool)
 
-# 
     def validate_values(self):
 
         self.number_of_inclusions_draw = int(self.number_of_inclusions.toPlainText())
@@ -395,11 +420,12 @@ class Ui_MainWindow(object):
         self.height_8.setText(_translate("MainWindow", "Shape of inclusions"))
         self.add_inculsions_push.setText(_translate("MainWindow", "ADD INCLUSIONS AFTER"))
         self.height_9.setText(_translate("MainWindow", "Save grain ID/Grains"))
-        self.dp_clear_push.setText(_translate("MainWindow", "DRAW 1"))
-        self.dp_redraw_push.setText(_translate("MainWindow", "DRAW 2"))
-        self.height_10.setText(_translate("MainWindow", "Draw grain"))
-        self.draw_grain_boundaries_push.setText(_translate("MainWindow", "DRAW"))
-        self.clear_grain_boundaries_push.setText(_translate("MainWindow", "CLEAR"))
+        self.dp_clear_push.setText(_translate("MainWindow", "DRAW"))
+        # self.dp_redraw_push.setText(_translate("MainWindow", "DRAW 2"))
+        self.height_10.setText(_translate("MainWindow", "Boundaries"))
+        self.draw1.setText(_translate("MainWindow", "DRAW"))
+        # self.draw2.setText(_translate("MainWindow", "DRAW 2"))
+        # self.draw3.setText(_translate("MainWindow", "DRAW 3"))
         self.save_push.setText(_translate("MainWindow", "SAVE"))
         self.height_11.setText(_translate("MainWindow", "Insert name of an imageto save"))
         self.validate_push.setText(_translate("MainWindow", "VALIDATE"))
